@@ -2,6 +2,13 @@
 #include <winsock2.h>
 #include <process.h> // 用于多线程 _beginthreadex
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#include <locale.h>
+#endif
+
 #pragma comment(lib, "ws2_32.lib")
 
 #define SERVER_PORT 6000 // 服务器监听的端口
@@ -38,6 +45,10 @@ unsigned int __stdcall ClientThread(void* pParam) {
 
 
 int main() {
+    #ifdef _WIN32
+        SetConsoleOutputCP(65001);         // 设置控制台输出编码为UTF-8
+    #endif
+
     // 1. 初始化 Winsock
     WSADATA wsaData;
     int nRet = WSAStartup(MAKEWORD(2, 2), &wsaData);

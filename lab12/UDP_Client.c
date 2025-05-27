@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <winsock2.h> // 建议使用 winsock2.h，功能更全
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#include <locale.h>
+#endif
+
 #pragma comment(lib, "ws2_32.lib") // 链接 Winsock 库
 
 // 根据实验手册定义服务器信息
@@ -11,6 +18,10 @@
 #define PRINTERROR(s) fprintf(stderr, "\n%s: %d\n", s, WSAGetLastError())
 
 int main() {
+    #ifdef _WIN32
+        SetConsoleOutputCP(65001);         // 设置控制台输出编码为UTF-8
+    #endif
+
     // 初始化 Winsock
     WSADATA wsaData;
     WORD wVersionRequested = MAKEWORD(2, 2); // 请求 Winsock 2.2 版本
