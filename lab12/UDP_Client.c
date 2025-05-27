@@ -19,7 +19,7 @@
 
 int main() {
     #ifdef _WIN32
-        SetConsoleOutputCP(65001);         // 设置控制台输出编码为UTF-8
+        SetConsoleOutputCP(65001); 
     #endif
 
     // 初始化 Winsock
@@ -33,9 +33,9 @@ int main() {
 
     // 创建一个 UDP 套接字
     SOCKET theSocket;
-    theSocket = socket(AF_INET,       // 地址族: Internet [cite: 1]
-                       SOCK_DGRAM,    // 类型: 数据报 (用于UDP) [cite: 3]
-                       IPPROTO_UDP);  // 协议: UDP [cite: 16]
+    theSocket = socket(AF_INET,       // 地址族: Internet
+                       SOCK_DGRAM,    // 类型: 数据报 (用于UDP)
+                       IPPROTO_UDP);  // 协议: UDP
     if (theSocket == INVALID_SOCKET) {
         PRINTERROR("socket()");
         WSACleanup();
@@ -45,7 +45,7 @@ int main() {
     // 设置服务器地址结构
     SOCKADDR_IN saServer;
     saServer.sin_family = AF_INET;
-    saServer.sin_port = htons(SERV_UDP_PORT); // 设置端口号，并转换成网络字节顺序 [cite: 1]
+    saServer.sin_port = htons(SERV_UDP_PORT); // 设置端口号，并转换成网络字节顺序
     saServer.sin_addr.s_addr = inet_addr(SERV_HOST_ADDR); // 设置 IP 地址
 
     // 向服务器发送数据
@@ -72,11 +72,11 @@ int main() {
     int nLen = sizeof(saClient);
 
     nRet = recvfrom(theSocket,            // 要接收的套接字
-                    rxBuf,                // 存放接收数据的缓冲区 [cite: 18]
-                    sizeof(rxBuf),        // 缓冲区大小 [cite: 18]
-                    0,                    // 标志位 [cite: 18]
+                    rxBuf,                // 存放接收数据的缓冲区
+                    sizeof(rxBuf),        // 缓冲区大小
+                    0,                    // 标志位
                     (LPSOCKADDR)&saClient,// 发送方地址
-                    &nLen);               // 地址结构的大小 [cite: 18]
+                    &nLen);               // 地址结构的大小
 
     if (nRet > 0) {
         printf("从服务器接收到数据: %s\n", rxBuf);
@@ -85,8 +85,8 @@ int main() {
     }
 
     // 关闭套接字并清理 Winsock
-    closesocket(theSocket); // [cite: 13]
-    WSACleanup();           // [cite: 22]
+    closesocket(theSocket); 
+    WSACleanup();           
 
     getchar();
     return 0;

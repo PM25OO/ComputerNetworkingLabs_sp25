@@ -19,38 +19,38 @@
 
 int main() {
     #ifdef _WIN32
-        SetConsoleOutputCP(65001);         // 设置控制台输出编码为UTF-8
+        SetConsoleOutputCP(65001);
     #endif
 
-    // 1. 初始化 Winsock
+    // 初始化 Winsock
     WSADATA wsaData;
     WORD wVersionRequested = MAKEWORD(2, 2);
-    int nRet = WSAStartup(wVersionRequested, &wsaData); // [cite: 26]
+    int nRet = WSAStartup(wVersionRequested, &wsaData);
     if (nRet != 0) {
         printf("WSAStartup 失败，错误代码: %d\n", nRet);
         return 1;
     }
 
-    // 2. 创建一个 TCP 套接字
+    // 创建一个 TCP 套接字
     SOCKET theSocket;
-    theSocket = socket(AF_INET,       // 地址族: Internet [cite: 27]
-                       SOCK_STREAM,   // 类型: 流式 (用于TCP) [cite: 3, 27]
-                       0);            // 协议: 流式套接字的默认协议 (TCP) [cite: 27]
+    theSocket = socket(AF_INET,       // 地址族: Internet
+                       SOCK_STREAM,   // 类型: 流式 (用于TCP)
+                       0);            // 协议: 流式套接字的默认协议 (TCP)
     if (theSocket == INVALID_SOCKET) {
         PRINTERROR("socket()");
         WSACleanup();
         return 1;
     }
 
-    // 3. 设置服务器地址结构
+    // 设置服务器地址结构
     SOCKADDR_IN saServer;
     saServer.sin_family = AF_INET;
     saServer.sin_port = htons(SERV_TCP_PORT);
     saServer.sin_addr.s_addr = inet_addr(SERV_HOST_ADDR);
 
-    // 4. 连接到服务器
+    // 连接到服务器
     printf("正在尝试连接到 %s:%d...\n", SERV_HOST_ADDR, SERV_TCP_PORT);
-    nRet = connect(theSocket, (LPSOCKADDR)&saServer, sizeof(saServer)); // [cite: 6]
+    nRet = connect(theSocket, (LPSOCKADDR)&saServer, sizeof(saServer));
     if (nRet == SOCKET_ERROR) {
         PRINTERROR("connect()");
         closesocket(theSocket);
@@ -59,10 +59,10 @@ int main() {
     }
     printf("连接已建立。\n");
 
-    // 5. 向服务器发送数据
+    // 向服务器发送数据
     char txBuf[1024] = "Hello from TCP Client!";
     printf("正在向服务器发送数据: %s\n", txBuf);
-    nRet = send(theSocket, txBuf, strlen(txBuf), 0); // [cite: 9]
+    nRet = send(theSocket, txBuf, strlen(txBuf), 0);
     if (nRet == SOCKET_ERROR) {
         PRINTERROR("send()");
         closesocket(theSocket);
@@ -70,10 +70,10 @@ int main() {
         return 1;
     }
 
-    // 6. 从服务器接收数据
+    // 从服务器接收数据
     char rxBuf[1024];
     memset(rxBuf, 0, sizeof(rxBuf));
-    nRet = recv(theSocket, rxBuf, sizeof(rxBuf), 0); // [cite: 11]
+    nRet = recv(theSocket, rxBuf, sizeof(rxBuf), 0);
     if (nRet > 0) {
         printf("从服务器接收到数据: %s\n", rxBuf);
     } else if (nRet == 0) {
@@ -82,9 +82,9 @@ int main() {
         PRINTERROR("recv()");
     }
 
-    // 7. 关闭套接字并清理 Winsock
-    closesocket(theSocket); // [cite: 13]
-    WSACleanup();           // [cite: 30]
+    // 关闭套接字并清理 Winsock
+    closesocket(theSocket); 
+    WSACleanup();
 
     getchar();
     return 0;
